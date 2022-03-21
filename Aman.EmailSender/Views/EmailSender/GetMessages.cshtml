@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Aman.EmailSender.Models.Message>
+
+<div class="row">
+    <div class="col-sm-12">
+ 
+        <table class="w-100 table-hover">
+            <tr>
+                <th><input type="checkbox" id="allselectedMessages" onchange="getAllSelectedMessages()" /> </th>
+                <th>Subject</th>
+                <th> Messages</th>
+
+            </tr>
+          
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td> <input type="checkbox"  value="@item.Id"  class="selectedMessages" onchange="getSelectedMessages()" />  </td>
+                        <td>
+                            @item.Subject
+                        </td>
+                        <td>
+                            @item.Text
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td class="">
+                        @using (Html.BeginForm("SendMessages", "EmailSender"))
+                        {
+
+                            <input type="hidden" name="selectedMessagesId" id="selectedMessagesId" />
+                            <input type="submit" value="Send Email" class="btn-success" />}
+                        </td>
+                </tr>
+            
+        </table>
+    </div>
+</div>
+<script>
+    function getAllSelectedMessages() {
+        if (!$("#allselectedMessages").is(':checked')) {
+            $('.selectedMessages').prop('checked', false);
+        }
+
+        else {
+            var sList = [];
+
+            $('.selectedMessages').each(function () {
+                $(this).prop('checked', true);
+                sList.push(this.value);
+            });
+
+            $("#selectedMessagesId").val(sList);
+        }
+    }
+
+
+    function getSelectedMessages() {
+        var sList = [];
+        $(".selectedMessages").each(function () {
+            if (this.checked) {
+                sList.push(this.value);
+            }
+        });
+        $("#selectedMessagesId").val(sList);
+    }
+
+</script>

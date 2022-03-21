@@ -1,0 +1,14 @@
+﻿@model Aman.EmailSender.Models.MessagesViewModel
+@{
+    ViewBag.Title = "SendEmail";
+}
+
+@using (Html.BeginForm("SendEmail", "EmailSender"))
+{
+   
+    <input type="email" multiple name="Emails" />
+    <div hidden>
+        @Html.EditorFor(m => m.MessagesId)
+    </div>
+    <input type="submit" value="Send Email" class="btn-success" />}
+

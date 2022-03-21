@@ -1,0 +1,41 @@
+﻿@model Aman.EmailSender.Models.Message
+
+@{ ViewBag.Title = "CreateMessage";
+
+}
+
+<style>
+    .w-100 {
+        Width: 100% !important;
+    }
+    </style>
+
+@using (Html.BeginForm("SaveMessage", "EmailSender"))
+{
+    <div class="row form-group">
+        <div class="col-sm-4">
+            @Html.LabelFor(m => m.Subject)
+        </div>
+        <div class="col-sm-6">@Html.TextBoxFor(m => m.Subject, new { @class = "w-100" })</div>
+        <div class="col-sm-2">@Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })</div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-sm-4">
+            @Html.LabelFor(m => m.Text)
+        </div>
+        <div class="col-sm-6">@Html.TextAreaFor(m => m.Text, new { @class = "w-100" })</div>
+        <div class="col-sm-2">@Html.ValidationMessageFor(m => m.Text, "", new { @class = "text-danger" })</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-offset-10">
+            <input type="submit" value="Save" class="btn-success text-center" />
+        </div>
+    </div>
+}
+
+@{Html.RenderAction("GetMessages");
+}
+
+
