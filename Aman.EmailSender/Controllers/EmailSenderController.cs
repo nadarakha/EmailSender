@@ -37,35 +37,43 @@ namespace Aman.EmailSender.Controllers
             return PartialView(DbContext.Messages.ToList());
         }
 
-        public ActionResult SendMessages( List<Guid>selectedMessagesId)
+        public ActionResult SendMessages(List<Guid> selectedMessagesId)
         {
-            var messageViewModel=new MessagesViewModel{MessagesId=selectedMessagesId};
+            var messageViewModel = new MessagesViewModel { MessagesId = selectedMessagesId };
 
-            return View("SendEmail",messageViewModel);
+
+            return View("SendEmail", messageViewModel);
         }
         [HttpPost]
         public ActionResult SendEmail(MessagesViewModel messagesViewModel)
         {
+            ViewBag.Error = "";
             var emails = messagesViewModel.Emails.Split(',');
-            var messages = DbContext.Messages.Where(m=> messagesViewModel.MessagesId.Contains(m.Id)).ToList();
-            var emailViewModel = new EmailViewModel{SenderEmail= "nadarakha19@gmail.com",SenderName="Aman",SenderPassword="" };
+            var messages = DbContext.Messages.Where(m => messagesViewModel.MessagesId.Contains(m.Id)).ToList();
+            var emailViewModel = new EmailViewModel { SenderEmail = "nadarakha19@gmail.com", SenderName = "Aman", SenderPassword = "" };
 
-            foreach(var email in emails)
-            {foreach( var msg in messages)
+            foreach (var email in emails)
+            {
+                foreach (var msg in messages)
                 {
                     emailViewModel.Subject = msg.Subject;
                     emailViewModel.ReceiverEmail = email;
                     emailViewModel.Body = msg.Text;
                     SendEmails(emailViewModel);
+                    ViewBag.Error += ViewBag.Error+"  ";
                 }
             }
-
-            return View();
+            if (ViewBag.Error != "")
+                return View();
+            else
+            {
+                return View("CreateMesssages");
+            }
         }
 
 
-        [HttpPost]
-        public ActionResult SendEmails(EmailViewModel email)
+
+        public void SendEmails(EmailViewModel email)
         {
             try
             {
@@ -93,14 +101,12 @@ namespace Aman.EmailSender.Controllers
                     {
                         smtp.Send(mess);
                     }
-                    
                 }
             }
             catch (Exception)
             {
-                return View("SendEmail");
+                ViewBag.Error ="cannot senee email to"+email.ReceiverEmail;
             }
-            return View("CreateMessage");
         }
 
     }
